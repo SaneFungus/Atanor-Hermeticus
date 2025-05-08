@@ -391,42 +391,47 @@ WAŻNE:
         },
         
         setupPathwayButtons: function() {
-            // Obsługa przycisków ścieżek
-            document.querySelectorAll(".pathway-btn").forEach((button) => {
-                button.addEventListener("click", function() {
-                    const pathType = this.getAttribute("data-path");
-                    const pathway = practicalPathways[pathType];
-                    
-                    if (!pathway) return;
-                    
-                    // Aktualizacja aktywnego przycisku
-                    document.querySelectorAll(".pathway-btn").forEach((btn) => btn.classList.remove("active"));
-                    this.classList.add("active");
-                    
-                    // Aktualizacja opisu ścieżki
-                    if (pathwayDescription) {
-                        pathwayDescription.textContent = pathway.description;
-                        pathwayDescription.classList.add("highlight-anim");
-                        
-                        // Usunięcie animacji po zakończeniu
-                        setTimeout(() => {
-                            pathwayDescription.classList.remove("highlight-anim");
-                        }, 2000);
-                    }
-                    
-                    // Zapamiętanie wybranej ścieżki
-                    currentPathway = pathway;
-                    
-                    // Zastosowanie ścieżki (wybór odpowiednich modułów)
-                    AtanorExtensions.Pathways.applyPracticalPathway(pathway);
-                    
-                    // Aktualizacja statusu
-                    if (statusDisplay) {
-                        statusDisplay.textContent = `Status: Wybrano ścieżkę "${pathway.name}"`;
-                    }
-                });
-            });
-        },
+    // Obsługa przycisków ścieżek
+    const pathwayButtons = document.querySelectorAll(".pathway-btn");
+    console.log("Znaleziono przycisków ścieżek:", pathwayButtons.length);
+    
+    pathwayButtons.forEach((button) => {
+        button.addEventListener("click", function() {
+            const pathType = this.getAttribute("data-path");
+            const pathway = practicalPathways[pathType];
+            
+            console.log("Kliknięto ścieżkę:", pathType, pathway);
+            
+            if (!pathway) return;
+            
+            // Aktualizacja aktywnego przycisku
+            document.querySelectorAll(".pathway-btn").forEach((btn) => btn.classList.remove("active"));
+            this.classList.add("active");
+            
+            // Aktualizacja opisu ścieżki
+            if (pathwayDescription) {
+                pathwayDescription.textContent = pathway.description;
+                pathwayDescription.classList.add("highlight-anim");
+                
+                // Usunięcie animacji po zakończeniu
+                setTimeout(() => {
+                    pathwayDescription.classList.remove("highlight-anim");
+                }, 2000);
+            }
+            
+            // Zapamiętanie wybranej ścieżki
+            currentPathway = pathway;
+            
+            // Zastosowanie ścieżki (wybór odpowiednich modułów)
+            AtanorExtensions.Pathways.applyPracticalPathway(pathway);
+            
+            // Aktualizacja statusu
+            if (statusDisplay) {
+                statusDisplay.textContent = `Status: Wybrano ścieżkę "${pathway.name}"`;
+            }
+        });
+    });
+}
         
         setupAdditionalPathways: function() {
             // Obsługa przycisku dodatkowych ścieżek
