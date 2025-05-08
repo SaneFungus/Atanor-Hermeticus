@@ -104,13 +104,18 @@ AtanorModules.ModuleManager = (function() {
         },
         
         setCurrentModule: function(module) {
-            currentModule = module;
-            
-            if (selectedModuleTitle && selectedModuleDescription) {
-                selectedModuleTitle.textContent = module.title;
-                selectedModuleDescription.textContent = module.description;
-            }
-        },
+    currentModule = module;
+    
+    if (selectedModuleTitle && selectedModuleDescription) {
+        if (module) {
+            selectedModuleTitle.textContent = module.title;
+            selectedModuleDescription.textContent = module.description;
+        } else {
+            selectedModuleTitle.textContent = "Brak";
+            selectedModuleDescription.textContent = "Wybierz moduł transformacji.";
+        }
+    }
+},
         
         findModuleByName: function(name) {
             let found = null;
