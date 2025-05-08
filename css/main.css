@@ -1,0 +1,133 @@
+:root {
+    --dark-blue: #0f1321;
+    --medium-blue: #1e2b45;
+    --light-blue: #2d3a4d;
+    --gold: #d4af37;
+    --muted-gold: #9a7d0a;
+    --text-light: #e2e2e2;
+    --text-muted: #8a8a8a;
+    --border-color: #5b5b5b;
+    --transition-time: 0.3s;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Georgia', serif;
+}
+
+body {
+    background-color: var(--dark-blue);
+    color: var(--text-light);
+    line-height: 1.6;
+    position: relative;
+    min-height: 100vh;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at center, transparent 0%, transparent 70%, rgba(42, 63, 95, 0.05) 70%, rgba(42, 63, 95, 0.05) 100%),
+        radial-gradient(circle at center, transparent 0%, transparent 65%, rgba(42, 63, 95, 0.08) 65%, rgba(42, 63, 95, 0.08) 100%);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Times New Roman', serif;
+    color: var(--gold);
+}
+
+h1 {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+    margin: 20px 0 10px;
+}
+
+h2 {
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: var(--muted-gold);
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+section {
+    background-color: rgba(22, 36, 71, 0.8);
+    border: 1px solid var(--gold);
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.panel {
+    background-color: var(--medium-blue);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 15px;
+    height: 100%;
+}
+
+textarea, .output-content {
+    width: 100%;
+    background-color: rgba(15, 15, 26, 0.7);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 15px;
+    color: var(--text-light);
+    font-size: 1rem;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+textarea {
+    min-height: 200px;
+}
+
+.output-content {
+    min-height: 300px;
+    max-height: 600px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
