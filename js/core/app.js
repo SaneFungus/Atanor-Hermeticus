@@ -4,6 +4,12 @@ window.AtanorCore = window.AtanorCore || {};
 (function() {
     // Inicjalizacja aplikacji
     function initializeApp() {
+        console.log("Elementy DOM:", {
+    pathwayButtons: document.querySelectorAll(".pathway-btn").length,
+    moduleItems: document.querySelectorAll(".module-item").length,
+    formatSelector: document.getElementById("format-selector") ? "Istnieje" : "Brak",
+    inputText: document.getElementById("input-text") ? "Istnieje" : "Brak"
+});
         console.log("Inicjalizacja Atanor Hermeticus...");
         
         // Inicjalizacja systemu filtrów
