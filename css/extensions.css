@@ -1,0 +1,182 @@
+/* Ścieżki Praktyczne */
+.practical-pathways {
+    background-color: rgba(22, 36, 71, 0.8);
+    border: 1px solid var(--gold);
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.pathway-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.pathway-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    background-color: var(--medium-blue);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all var(--transition-time) ease;
+    text-align: center;
+}
+
+.pathway-btn i {
+    font-size: 1.5rem;
+    color: var(--gold);
+    margin-bottom: 10px;
+}
+
+.pathway-btn span {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.pathway-btn small {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.pathway-btn:hover {
+    background-color: var(--light-blue);
+    border-color: var(--gold);
+}
+
+.pathway-btn.active {
+    background-color: rgba(154, 125, 10, 0.2);
+    border-color: var(--gold);
+}
+
+.additional-pathways {
+    margin-top: 15px;
+}
+
+.additional-pathways-toggle {
+    width: 100%;
+    text-align: center;
+    padding: 8px;
+    background-color: rgba(30, 43, 69, 0.7);
+    border: 1px dashed var(--border-color);
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.additional-pathways-toggle:hover {
+    color: var(--text-light);
+    border-color: var(--border-color);
+}
+
+.additional-pathways-content {
+    display: none;
+    margin-top: 15px;
+}
+
+.additional-pathways-content.visible {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+}
+
+.pathway-description {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: rgba(30, 43, 69, 0.5);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+/* Formaty Prezentacji Wiedzy */
+.knowledge-formats {
+    background-color: rgba(22, 36, 71, 0.8);
+    border: 1px solid var(--gold);
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.format-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.format-dropdown {
+    flex-grow: 1;
+    padding: 10px;
+    background-color: var(--medium-blue);
+    color: var(--text-light);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.format-dropdown:focus {
+    outline: none;
+    border-color: var(--gold);
+}
+
+.info-button {
+    background-color: transparent;
+    color: var(--gold);
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.format-description {
+    padding: 15px;
+    background-color: rgba(30, 43, 69, 0.5);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+/* Stany Aktywne */
+.pathway-btn.active i {
+    transform: scale(1.2);
+}
+
+.pathway-btn.active small {
+    color: var(--text-light);
+}
+
+/* Animacje */
+@keyframes highlight {
+    0% { background-color: rgba(154, 125, 10, 0.1); }
+    50% { background-color: rgba(154, 125, 10, 0.3); }
+    100% { background-color: rgba(154, 125, 10, 0.1); }
+}
+
+.highlight-anim {
+    animation: highlight 2s ease-in-out;
+}
+
+/* Responsywność dla nowych sekcji */
+@media (max-width: 768px) {
+    .pathway-buttons,
+    .additional-pathways-content.visible {
+        grid-template-columns: 1fr;
+    }
+    
+    .format-selector {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+.pathway-module {
+    border-left: 3px solid var(--gold) !important;
+}
