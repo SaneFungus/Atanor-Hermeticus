@@ -1,10 +1,9 @@
-window.AtanorExtensions = window.AtanorExtensions || {};
+window.AtanorExtensions = window.AtanorExtensions || {}
 
 // Ścieżki praktyczne
-AtanorExtensions.Pathways = (function() {
-    // Definicje ścieżek praktycznych
-    const practicalPathways = {
-        
+AtanorExtensions.Pathways = (function () {
+  // Definicje ścieżek praktycznych
+  const practicalPathways = {
     original: {
       name: "Wyjście Oryginalne (Hermetyczne)",
       description:
@@ -366,128 +365,137 @@ WAŻNE:
 - Uwzględnij kontekst przestrzenny i temporalny
         `,
     },
-    };
-    
-    // Stan prywatny
-    let currentPathway = null;
-    let pathwayDescription;
-    let moduleItems;
-    let statusDisplay;
-    
-    // Metody publiczne
-    return {
-        initialize: function() {
-            pathwayDescription = document.getElementById("pathway-description");
-            moduleItems = document.querySelectorAll(".module-item");
-            statusDisplay = document.getElementById("status-display");
-            
-            // Inicjalizacja przycisków ścieżek
-            this.setupPathwayButtons();
-            
-            // Inicjalizacja dodatkowych ścieżek
-            this.setupAdditionalPathways();
-            
-            console.log("Pathways zainicjalizowany");
-        },
-        
-        setupPathwayButtons: function() {
-    // Obsługa przycisków ścieżek
-    const pathwayButtons = document.querySelectorAll(".pathway-btn");
-    console.log("Znaleziono przycisków ścieżek:", pathwayButtons.length);
-    
-    pathwayButtons.forEach((button) => {
-        button.addEventListener("click", function() {
-            const pathType = this.getAttribute("data-path");
-            const pathway = practicalPathways[pathType];
-            
-            console.log("Kliknięto ścieżkę:", pathType, pathway);
-            
-            if (!pathway) return;
-            
-            // Aktualizacja aktywnego przycisku
-            document.querySelectorAll(".pathway-btn").forEach((btn) => btn.classList.remove("active"));
-            this.classList.add("active");
-            
-            // Aktualizacja opisu ścieżki
-            if (pathwayDescription) {
-                pathwayDescription.textContent = pathway.description;
-                pathwayDescription.classList.add("highlight-anim");
-                
-                // Usunięcie animacji po zakończeniu
-                setTimeout(() => {
-                    pathwayDescription.classList.remove("highlight-anim");
-                }, 2000);
+  }
+
+  // Stan prywatny
+  let currentPathway = null
+  let pathwayDescription
+  let moduleItems
+  let statusDisplay
+
+  // Metody publiczne
+  return {
+    initialize: function () {
+      pathwayDescription = document.getElementById("pathway-description")
+      moduleItems = document.querySelectorAll(".module-item")
+      statusDisplay = document.getElementById("status-display")
+
+      // Inicjalizacja przycisków ścieżek
+      this.setupPathwayButtons()
+
+      // Inicjalizacja dodatkowych ścieżek
+      this.setupAdditionalPathways()
+
+      console.log("Pathways zainicjalizowany")
+    },
+
+    setupPathwayButtons: function () {
+      // Obsługa przycisków ścieżek
+      const pathwayButtons = document.querySelectorAll(".pathway-btn")
+      console.log("Znaleziono przycisków ścieżek:", pathwayButtons.length)
+
+      pathwayButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          const pathType = this.getAttribute("data-path")
+          const pathway = practicalPathways[pathType]
+
+          console.log("Kliknięto ścieżkę:", pathType, pathway)
+
+          if (!pathway) return
+
+          // Aktualizacja aktywnego przycisku
+          document
+            .querySelectorAll(".pathway-btn")
+            .forEach((btn) => btn.classList.remove("active"))
+          this.classList.add("active")
+
+          // Aktualizacja opisu ścieżki
+          if (pathwayDescription) {
+            pathwayDescription.textContent = pathway.description
+            pathwayDescription.classList.add("highlight-anim")
+
+            // Usunięcie animacji po zakończeniu
+            setTimeout(() => {
+              pathwayDescription.classList.remove("highlight-anim")
+            }, 2000)
+          }
+
+          // Zapamiętanie wybranej ścieżki
+          currentPathway = pathway
+
+          // Zastosowanie ścieżki (wybór odpowiednich modułów)
+          AtanorExtensions.Pathways.applyPracticalPathway(pathway)
+
+          // Aktualizacja statusu
+          if (statusDisplay) {
+            statusDisplay.textContent = `Status: Wybrano ścieżkę "${pathway.name}"`
+          }
+        })
+      })
+    },
+
+    setupAdditionalPathways: function () {
+      // Obsługa przycisku dodatkowych ścieżek
+      const additionalPathwaysToggle = document.querySelector(
+        ".additional-pathways-toggle"
+      )
+      if (additionalPathwaysToggle) {
+        additionalPathwaysToggle.addEventListener("click", function () {
+          const content = document.querySelector(".additional-pathways-content")
+          if (content) {
+            content.classList.toggle("visible")
+
+            // Zmiana ikony i tekstu przycisku
+            if (content.classList.contains("visible")) {
+              this.innerHTML =
+                'Mniej ścieżek praktycznych <i class="fas fa-chevron-up"></i>'
+            } else {
+              this.innerHTML =
+                'Więcej ścieżek praktycznych <i class="fas fa-chevron-down"></i>'
             }
-            
-            // Zapamiętanie wybranej ścieżki
-            currentPathway = pathway;
-            
-            // Zastosowanie ścieżki (wybór odpowiednich modułów)
-            AtanorExtensions.Pathways.applyPracticalPathway(pathway);
-            
-            // Aktualizacja statusu
-            if (statusDisplay) {
-                statusDisplay.textContent = `Status: Wybrano ścieżkę "${pathway.name}"`;
-            }
-        });
-    });
-}
-        
-        setupAdditionalPathways: function() {
-            // Obsługa przycisku dodatkowych ścieżek
-            const additionalPathwaysToggle = document.querySelector(".additional-pathways-toggle");
-            if (additionalPathwaysToggle) {
-                additionalPathwaysToggle.addEventListener("click", function() {
-                    const content = document.querySelector(".additional-pathways-content");
-                    if (content) {
-                        content.classList.toggle("visible");
-                        
-                        // Zmiana ikony i tekstu przycisku
-                        if (content.classList.contains("visible")) {
-                            this.innerHTML = 'Mniej ścieżek praktycznych <i class="fas fa-chevron-up"></i>';
-                        } else {
-                            this.innerHTML = 'Więcej ścieżek praktycznych <i class="fas fa-chevron-down"></i>';
-                        }
-                    }
-                });
-            }
-        },
-        
-        applyPracticalPathway: function(pathway) {
-            // Resetowanie aktualnej selekcji modułów
-            moduleItems.forEach((item) => {
-                item.classList.remove("active");
-                item.classList.remove("pathway-module");
-            });
-            
-            // Zaznaczenie modułów ze ścieżki
-            if (pathway && pathway.modules) {
-                pathway.modules.forEach((moduleName) => {
-                    const moduleElement = AtanorModules.ModuleManager.findModuleByName(moduleName);
-                    if (moduleElement) {
-                        moduleElement.classList.add("pathway-module");
-                        // Animacja podświetlająca moduły
-                        moduleElement.classList.add("highlight-anim");
-                        setTimeout(() => {
-                            moduleElement.classList.remove("highlight-anim");
-                        }, 2000);
-                    }
-                });
-                
-                // Aktywacja pierwszego modułu
-                const firstModule = AtanorModules.ModuleManager.findModuleByName(pathway.modules[0]);
-                if (firstModule) {
-                    firstModule.click();
-                }
-            }
-        },
-        
-        getCurrentPathway: function() {
-            return currentPathway;
-        },
-        
-        getAllPathways: function() {
-            return practicalPathways;
+          }
+        })
+      }
+    },
+
+    applyPracticalPathway: function (pathway) {
+      // Resetowanie aktualnej selekcji modułów
+      moduleItems.forEach((item) => {
+        item.classList.remove("active")
+        item.classList.remove("pathway-module")
+      })
+
+      // Zaznaczenie modułów ze ścieżki
+      if (pathway && pathway.modules) {
+        pathway.modules.forEach((moduleName) => {
+          const moduleElement =
+            AtanorModules.ModuleManager.findModuleByName(moduleName)
+          if (moduleElement) {
+            moduleElement.classList.add("pathway-module")
+            // Animacja podświetlająca moduły
+            moduleElement.classList.add("highlight-anim")
+            setTimeout(() => {
+              moduleElement.classList.remove("highlight-anim")
+            }, 2000)
+          }
+        })
+
+        // Aktywacja pierwszego modułu
+        const firstModule = AtanorModules.ModuleManager.findModuleByName(
+          pathway.modules[0]
+        )
+        if (firstModule) {
+          firstModule.click()
         }
-    };
-})();
+      }
+    },
+
+    getCurrentPathway: function () {
+      return currentPathway
+    },
+
+    getAllPathways: function () {
+      return practicalPathways
+    },
+  }
+})()
