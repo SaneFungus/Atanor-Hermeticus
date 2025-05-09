@@ -11,6 +11,7 @@ AtanorCore.Interface = (function() {
     let loadingIndicator;
     let copyButton;
     let copiedMessage;
+    let clearModulesBtn; // Nowy przycisk do czyszczenia wybranych modułów
     
     // Metody publiczne
     return {
@@ -25,18 +26,55 @@ AtanorCore.Interface = (function() {
             copyButton = document.getElementById("copy-button");
             copiedMessage = document.getElementById("copied-message");
             
+            // Dodaj przycisk do czyszczenia wybranych modułów
+            this.addClearModulesButton();
+            
             // Inicjalizacja przycisków
             this.setupButtons();
+        },
+        
+        // Nowa funkcja dodająca przycisk do czyszczenia modułów
+        addClearModulesButton: function() {
+            // Znajdź kontener listy wybranych modułów (będzie dodany przez ModuleManager)
+            const modulesList = document.getElementById("selected-modules-list");
+            if (modulesList) {
+                // Sprawdź, czy przycisk już istnieje
+                clearModulesBtn = document.getElementById("clear-modules-btn");
+                if (!clearModulesBtn) {
+                    // Utwórz przycisk
+                    clearModulesBtn = document.createElement("button");
+                    clearModulesBtn.id = "clear-modules-btn";
+                    clearModulesBtn.className = "clear-modules-btn";
+                    clearModulesBtn.innerHTML = '<i class="fas fa-trash"></i> Wyczyść wszystkie moduły';
+                    
+                    // Wstaw przycisk do nagłówka listy modułów
+                    const header = modulesList.querySelector("h4");
+                    if (header) {
+                        header.parentNode.insertBefore(clearModulesBtn, header.nextSibling);
+                    } else {
+                        modulesList.appendChild(clearModulesBtn);
+                    }
+                    
+                    // Dodaj obsługę zdarzenia
+                    clearModulesBtn.addEventListener("click", () => {
+                        AtanorModules.ModuleManager.clearSelectedModules();
+                        this.updateStatus("Status: Wyczyszczono wszystkie wybrane moduły");
+                    });
+                }
+            } else {
+                // Jeśli lista jeszcze nie istnieje, spróbuj ponownie za chwilę
+                setTimeout(() => this.addClearModulesButton(), 500);
+            }
         },
         
         setupButtons: function() {
             // Transmute button
             if (transmuteBtn) {
-                transmuteBtn.addEventListener("click", function() {
-                    const currentModule = AtanorModules.ModuleManager.getCurrentModule();
+                transmuteBtn.addEventListener("click", () => {
+                    const selectedModules = AtanorModules.ModuleManager.getSelectedModules();
                     
-                    if (!currentModule) {
-                        statusDisplay.textContent = "Status: Wybierz moduł transformacji";
+                    if (!selectedModules || selectedModules.length === 0) {
+                        statusDisplay.textContent = "Status: Wybierz co najmniej jeden moduł transformacji";
                         return;
                     }
 
@@ -46,57 +84,57 @@ AtanorCore.Interface = (function() {
                     }
 
                     // Show loading indicator
-                    loadingIndicator.style.display = "block";
-                    outputText.style.display = "none";
+                    this.showLoading();
 
                     // Generowanie promptu
                     try {
                         const prompt = AtanorCore.PromptGenerator.generatePrompt();
-                        outputText.textContent = prompt;
-                        outputText.style.display = "block";
-                        statusDisplay.textContent = "Status: Prompt wygenerowany";
+                        this.setOutput(prompt);
+                        this.updateStatus(`Status: Prompt wygenerowany (${selectedModules.length} ${
+                            selectedModules.length === 1 ? 'moduł' : 
+                            (selectedModules.length >= 2 && selectedModules.length <= 4) ? 'moduły' : 'modułów'
+                        })`);
                     } catch (error) {
                         console.error("Error:", error);
-                        outputText.textContent = "Wystąpił błąd podczas generowania promptu: " + error.message;
-                        outputText.style.display = "block";
-                        statusDisplay.textContent = "Status: Błąd generowania promptu";
+                        this.setOutput("Wystąpił błąd podczas generowania promptu: " + error.message);
+                        this.updateStatus("Status: Błąd generowania promptu");
                     } finally {
-                        loadingIndicator.style.display = "none";
+                        this.hideLoading();
                     }
                 });
             }
 
             // Reset button
             if (resetBtn) {
-                resetBtn.addEventListener("click", function() {
+                resetBtn.addEventListener("click", () => {
                     // Reset text areas
                     inputText.value = "";
                     outputText.textContent = "Wynik transformacji pojawi się tutaj po zainicjowaniu procesu...";
 
                     // Reset module selection
-                    document.querySelectorAll(".module-item").forEach((item) => item.classList.remove("active"));
-                    AtanorModules.ModuleManager.setCurrentModule(null);
-                    document.getElementById("selected-module-title").textContent = "Brak";
-                    document.getElementById("selected-module-description").textContent = "Wybierz moduł transformacji.";
+                    AtanorModules.ModuleManager.clearSelectedModules();
 
                     // Reset all filters
-                    AtanorModules.FilterSystem.clearAllFilters();
+                    if (AtanorModules.FilterSystem) {
+                        AtanorModules.FilterSystem.clearAllFilters();
+                    }
 
                     // Reset status
-                    statusDisplay.textContent = "Status: Gotowy";
+                    this.updateStatus("Status: Gotowy");
                 });
             }
             
             // Copy button
             if (copyButton) {
-                copyButton.addEventListener("click", function() {
+                copyButton.addEventListener("click", () => {
                     // Sprawdź, czy jest coś do skopiowania
                     const promptText = outputText.textContent.trim();
                     if (
                         !promptText ||
-                        promptText === 'Wygenerowany prompt pojawi się tutaj po wybraniu modułu i kliknięciu "Transmutuj"...'
+                        promptText === 'Wygenerowany prompt pojawi się tutaj po wybraniu modułu i kliknięciu "Transmutuj"...' ||
+                        promptText === 'Wynik transformacji pojawi się tutaj po zainicjowaniu procesu...'
                     ) {
-                        statusDisplay.textContent = "Status: Brak promptu do skopiowania";
+                        this.updateStatus("Status: Brak promptu do skopiowania");
                         return;
                     }
 
@@ -106,7 +144,7 @@ AtanorCore.Interface = (function() {
                         .then(() => {
                             // Wyświetlenie komunikatu o skopiowaniu
                             copiedMessage.style.display = "inline";
-                            statusDisplay.textContent = "Status: Prompt skopiowany do schowka";
+                            this.updateStatus("Status: Prompt skopiowany do schowka");
 
                             // Ukrycie komunikatu po 2 sekundach
                             setTimeout(() => {
@@ -115,7 +153,7 @@ AtanorCore.Interface = (function() {
                         })
                         .catch((err) => {
                             console.error("Błąd podczas kopiowania:", err);
-                            statusDisplay.textContent = "Status: Błąd podczas kopiowania do schowka";
+                            this.updateStatus("Status: Błąd podczas kopiowania do schowka");
                         });
                 });
             }
